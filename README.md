@@ -1,4 +1,4 @@
-# Include Hub - Front-end
+# Include Hub - Front-end - v2
 
 ## Requisitos
 - Node.js 20 ou superior
