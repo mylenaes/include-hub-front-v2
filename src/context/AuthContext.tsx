@@ -15,27 +15,31 @@ const Contexto = createContext<AuthContexto | null>(null)
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<Usuario | null>(null)
   const [carregando, setCarregando] = useState(true)
+
   useEffect(() => {
     const token = sessionStorage.getItem('token')
     if (!token) {
       setCarregando(false)
       return
-    } authService.me()
+    }
+    authService
+      .me()
       .then(setUser)
       .catch(() => sessionStorage.removeItem('token'))
       .finally(() => setCarregando(false))
   }, [])
 
   async function login(email: string, senha: string) {
-    const resposta = await authService.login(email, senha)
-    sessionStorage.setItem('token', resposta.token)
-    setUser(await authService.me())
-  }
+  const resposta = await authService.login(email, senha)
+  sessionStorage.setItem('token', resposta.token)
+  setUser(resposta.usuario)
+}
 
   function logout() {
     sessionStorage.removeItem('token')
     setUser(null)
   }
+
   return (
     <Contexto.Provider value={{ user, carregando, login, logout }}>
       {children}
@@ -47,5 +51,6 @@ export function useAuth() {
   const contexto = useContext(Contexto)
   if (!contexto) {
     throw new Error('useAuth precisa estar dentro do AuthProvider')
-  } return contexto
+  }
+  return contexto
 }
