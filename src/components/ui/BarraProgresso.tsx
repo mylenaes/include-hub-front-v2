@@ -1,5 +1,4 @@
-import type { CorRotulo } from "../../utils/formatadores";
-
+import type { CorRotulo } from "../../types/rotulos";
 const cores: Record<CorRotulo | "neutro", string> = {
   green: "bg-[#3ddc84]",
   orange: "bg-[#ecc13a]",

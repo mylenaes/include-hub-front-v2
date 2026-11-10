@@ -1,1 +1,39 @@
+/* Fonte */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+/* Tailwind */
 @import "tailwindcss";
+
+/* Variáveis globais */
+:root {
+  /* Cores principais */
+  --color-primary: #de4f15;
+  --color-secondary: #029b99;
+
+  /* Backgrounds */
+  --color-background: #1c1d27;
+  --color-surface: #2a2e42;
+  --color-sidebar: #313751;
+
+  /* Textos */
+  --color-text: #d9d9d9;
+  --color-muted: #909ad1;
+  --color-light: #c0c9f7;
+
+  /* Bordas */
+  --color-border: #4a4f69;
+
+  /* Status */
+  --color-success: #57b142;
+  --color-danger: #e11518;
+  --color-warning: #ecc039;
+  --color-neutral: #ebe7b7;
+
+  /* Tipografia */
+  --font-primary: "Inter", sans-serif;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+}

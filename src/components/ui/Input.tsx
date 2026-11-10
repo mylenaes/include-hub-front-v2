@@ -14,7 +14,22 @@ interface InputProps {
   min?: number;
   max?: number;
   step?: number;
+  variante?: "padrao" | "login";
 }
+
+const estilos = {
+  padrao: (erro?: string) => `
+    w-full px-4 py-2 bg-[#2A2E42] border
+    ${erro ? "border-red-500" : "border-gray-300"}
+    rounded-lg outline-none transition text-white placeholder-gray-400
+    focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:opacity-50
+  `,
+  login: () => `
+    w-full rounded-2xl bg-[#282D43] px-6 py-4 text-lg font-medium text-white
+    placeholder:text-[#656877] outline-none transition
+    focus:ring-2 focus:ring-[#A5AED8] disabled:opacity-50
+  `,
+};
 
 const Input = ({
   label,
@@ -30,6 +45,7 @@ const Input = ({
   min,
   max,
   step,
+  variante = "padrao",
 }: InputProps) => {
   const id = useId();
 
@@ -54,32 +70,11 @@ const Input = ({
         min={min}
         max={max}
         step={step}
-        className={`
-          w-full
-          px-4
-          py-2
-          bg-[#2A2E42]
-          border
-          ${erro ? "border-red-500" : "border-gray-300"}
-          rounded-lg
-          outline-none
-          transition
-          text-white
-          placeholder-gray-400
-          focus:border-blue-500
-          focus:ring-2
-          focus:ring-blue-100
-          disabled:opacity-50
-        `}
+        className={estilos[variante](erro)}
       />
 
-      {erro && (
-        <span className="text-xs text-red-500">
-          {erro}
-        </span>
-      )}
+      {erro && <span className="text-xs text-red-500">{erro}</span>}
     </div>
   );
 };
-
 export default Input;

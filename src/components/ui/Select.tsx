@@ -62,6 +62,7 @@ const Select = ({
             focus:ring-2
             focus:ring-blue-100
             disabled:opacity-50
+            disabled:cursor-not-allowed
           `}
         >
           <option value="" disabled>

@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 
 const LayoutBase = () => {
-
   return (
     <div
       className="
@@ -12,7 +11,7 @@ const LayoutBase = () => {
       "
     >
       <Sidebar />
-      <main className="flex-1 p-8 overflow-y-auto">
+      <main className="flex-1 min-w-0 p-4 pt-24 md:p-8 overflow-y-auto">
         <Outlet />
       </main>
     </div>

@@ -1,4 +1,4 @@
-import type { CorRotulo } from "../../utils/formatadores";
+import type { CorRotulo } from "../../types/rotulos";
 
 const estilos: Record<CorRotulo, { caixa: string; ponto: string }> = {
   green: { caixa: "bg-[#12301f] text-[#4ade80]", ponto: "bg-[#4ade80]" },
