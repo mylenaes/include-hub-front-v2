@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
 import Badge from '../components/ui/Badge'
-import BarraProgresso from '../components/ui/BarraProgresso'
 import Button from '../components/ui/Button'
 import ModalNovoProjeto from '../components/projetos/ModalNovoProjeto'
 import { useAuth } from '../context/AuthContext'
 import { HttpError } from '../services/http'
 import { pessoasService } from '../services/pessoasService'
 import { projetosService } from '../services/projetosService'
-import { formatarHoras, infoRotulo } from '../utils/formatadores'
+import { formatarTipo, infoRotulo } from '../utils/formatadores'
 import type { Pessoa } from '../types/pessoa'
 import type { NovoProjeto, Projeto } from '../types/projeto'
 
@@ -27,7 +26,7 @@ export default function Projetos() {
     try {
       setCarregando(true)
       setErro(null)
-      setProjetos(await projetosService.listar())
+      setProjetos((await projetosService.listar()) ?? [])
     } catch (e) {
       setErro(e instanceof Error ? e.message : 'Erro ao carregar')
     } finally {
@@ -42,15 +41,12 @@ export default function Projetos() {
     setErrosCampos({})
     setErroModal(null)
     setModalAberto(true)
-    if (gerentes.length === 0) {
-      try {
-        setGerentes(await pessoasService.listarGerentes())
-      } catch (e) {
-        setErroModal(e instanceof Error ? e.message : 'Não foi possível carregar gerentes')
-      }
+    try {
+      setGerentes((await pessoasService.listarGerentes()) ?? [])
+    } catch (e) {
+      setErroModal(e instanceof Error ? e.message : 'Não foi possível carregar gerentes')
     }
   }
-
   async function salvar(dados: NovoProjeto) {
     try {
       setSalvando(true)
@@ -90,17 +86,14 @@ export default function Projetos() {
           </button>
         )}
       </header>
-
       <div className="min-h-[60vh] rounded-2xl border border-[#A5AED8]/50 bg-[#2A2E42] px-6 py-4">
         {carregando && <p className="py-10 text-center text-[#A5AED8]">Carregando projetos...</p>}
-
         {erro && !carregando && (
           <div role="alert" className="flex flex-col items-center gap-4 py-10">
             <p className="text-red-500">{erro}</p>
             <Button onClick={carregar}>Tentar de novo</Button>
           </div>
         )}
-
         {!carregando && !erro && total === 0 && (
           <p className="py-10 text-center text-[#A5AED8]">
             {ehAdmin
@@ -108,7 +101,6 @@ export default function Projetos() {
               : 'Você ainda não possui projetos.'}
           </p>
         )}
-
         {!carregando && !erro && total > 0 && (
           <div className="overflow-x-auto">
             <table className="w-full text-left">
@@ -117,35 +109,25 @@ export default function Projetos() {
                   <th className="py-4 pr-4 font-medium">Projeto</th>
                   <th className="py-4 pr-4 font-medium">Cliente</th>
                   {ehAdmin && <th className="py-4 pr-4 font-medium">Gerente</th>}
-                  <th className="py-4 pr-4 font-medium">Status</th>
-                  <th className="py-4 font-medium">Horas usadas</th>
+                  <th className="py-4 font-medium">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {projetos.map((p) => {
                   const status = infoRotulo(p.status)
-                  const horas = p.rotuloHoras ? infoRotulo(p.rotuloHoras) : undefined
-  
-                  const percentual =
-                    p.horasContratadas > 0 ? (p.horasUsadas / p.horasContratadas) * 100 : 0
                   return (
                     <tr key={p.id} className="border-b border-white/20 text-white last:border-b-0">
                       <td className="py-5 pr-4">{p.nome}</td>
-                      <td className="py-5 pr-4">{p.cliente}</td>
-                      {ehAdmin && <td className="py-5 pr-4">{p.gerenteNome}</td>}
                       <td className="py-5 pr-4">
-                        <Badge texto={status.texto} cor={status.cor} />
-                      </td>
-                      <td className="py-5">
-                        {p.interno ? (
-                          <span className="text-[#A5AED8]">—</span>
+                        {p.tipo === 'INTERNO' ? (
+                          <span className="text-[#A5AED8]">{formatarTipo(p.tipo)}</span>
                         ) : (
-                          <BarraProgresso
-                            percentual={percentual}
-                            cor={horas?.cor}
-                            rotulo={`${formatarHoras(p.horasUsadas)} de ${formatarHoras(p.horasContratadas)}`}
-                          />
+                          p.cliente ?? '—'
                         )}
+                      </td>
+                      {ehAdmin && <td className="py-5 pr-4">{p.gerente.nome}</td>}
+                      <td className="py-5">
+                        <Badge texto={status.texto} cor={status.cor} />
                       </td>
                     </tr>
                   )
@@ -155,7 +137,6 @@ export default function Projetos() {
           </div>
         )}
       </div>
-
       {modalAberto && (
         <ModalNovoProjeto
           gerentes={gerentes}

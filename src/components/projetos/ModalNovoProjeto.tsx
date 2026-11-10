@@ -5,7 +5,7 @@ import Input from "../ui/Input";
 import Modal from "../ui/Modal";
 import Select from "../ui/Select";
 import type { Pessoa } from "../../types/pessoa";
-import type { NovoProjeto } from "../../types/projeto";
+import type { NovoProjeto, TipoProjeto } from "../../types/projeto";
 
 interface ModalNovoProjetoProps {
   gerentes: Pessoa[];
@@ -16,6 +16,11 @@ interface ModalNovoProjetoProps {
   onFechar: () => void;
 }
 
+const opcoesTipo = [
+  { valor: "CLIENTE", texto: "Cliente" },
+  { valor: "INTERNO", texto: "Interno" },
+];
+
 const ModalNovoProjeto = ({
   gerentes,
   salvando,
@@ -25,21 +30,34 @@ const ModalNovoProjeto = ({
   onFechar,
 }: ModalNovoProjetoProps) => {
   const [nome, setNome] = useState("");
+  const [tipo, setTipo] = useState<TipoProjeto>("CLIENTE");
   const [cliente, setCliente] = useState("");
   const [gerenteId, setGerenteId] = useState("");
   const [horas, setHoras] = useState("");
+  const [inicio, setInicio] = useState("");
+  const [fimPrevisto, setFimPrevisto] = useState("");
+
+  const interno = tipo === "INTERNO";
+
+  const periodoValido = inicio !== "" && fimPrevisto !== "" && fimPrevisto >= inicio;
 
   const valido =
-    nome.trim() !== "" && cliente.trim() !== "" && gerenteId !== "" && Number(horas) > 0;
+    nome.trim() !== "" &&
+    gerenteId !== "" &&
+    periodoValido &&
+    (interno || (cliente.trim() !== "" && Number(horas) > 0));
 
   const enviar = (e: FormEvent) => {
     e.preventDefault();
     if (!valido || salvando) return;
     onSalvar({
       nome: nome.trim(),
-      cliente: cliente.trim(),
+      tipo,
+      cliente: interno ? "" : cliente.trim(),
       gerenteId: Number(gerenteId),
-      horasContratadas: Number(horas),
+      horasContratadas: interno ? 0 : Number(horas),
+      inicio,
+      fimPrevisto,
     });
   };
 
@@ -53,13 +71,23 @@ const ModalNovoProjeto = ({
           onChange={(e) => setNome(e.target.value)}
           erro={erros.nome}
         />
-        <Input
-          label="Cliente"
-          name="cliente"
-          value={cliente}
-          onChange={(e) => setCliente(e.target.value)}
-          erro={erros.cliente}
+        <Select
+          label="Tipo"
+          name="tipo"
+          value={tipo}
+          onChange={(e) => setTipo(e.target.value as TipoProjeto)}
+          opcoes={opcoesTipo}
+          erro={erros.tipo}
         />
+        {!interno && (
+          <Input
+            label="Cliente"
+            name="cliente"
+            value={cliente}
+            onChange={(e) => setCliente(e.target.value)}
+            erro={erros.cliente}
+          />
+        )}
         <Select
           label="Gerente responsável"
           name="gerenteId"
@@ -68,14 +96,37 @@ const ModalNovoProjeto = ({
           opcoes={gerentes.map((g) => ({ valor: String(g.id), texto: g.nome }))}
           erro={erros.gerenteId}
         />
+        {!interno && (
+          <Input
+            label="Horas contratadas"
+            name="horasContratadas"
+            type="number"
+            min={1}
+            value={horas}
+            onChange={(e) => setHoras(e.target.value)}
+            erro={erros.horasContratadas}
+          />
+        )}
         <Input
-          label="Horas contratadas"
-          name="horasContratadas"
-          type="number"
-          min={1}
-          value={horas}
-          onChange={(e) => setHoras(e.target.value)}
-          erro={erros.horasContratadas}
+          label="Início"
+          name="inicio"
+          type="date"
+          value={inicio}
+          onChange={(e) => setInicio(e.target.value)}
+          erro={erros.inicio}
+        />
+        <Input
+          label="Fim previsto"
+          name="fimPrevisto"
+          type="date"
+          value={fimPrevisto}
+          onChange={(e) => setFimPrevisto(e.target.value)}
+          erro={
+            erros.fimPrevisto ??
+            (inicio && fimPrevisto && fimPrevisto < inicio
+              ? "O fim previsto não pode ser antes do início"
+              : undefined)
+          }
         />
         {erroGeral && (
           <p role="alert" className="text-sm text-red-500">
