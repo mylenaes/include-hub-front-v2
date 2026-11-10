@@ -19,6 +19,7 @@ export const menuPorPapel: Record<Papel, ItemMenu[]> = {
     { label: 'Registrar horas', path: '/lancamentos' },
     { label: 'Minha equipe', path: '/equipe' },
     { label: 'Alocações', path: '/alocacoes' },
+    { label: 'Saúde', path: '/saude' },
     { label: 'Disponibilidade', path: '/disponibilidade' },
   ],
   COLABORADOR: [

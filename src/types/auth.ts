@@ -6,3 +6,13 @@ export interface Usuario {
   email: string
   papel: Papel
 }
+
+export interface LoginResposta {
+  token: string
+  usuario: Usuario
+}
+
+export interface Categoria {
+  id: number
+  nome: string
+}
