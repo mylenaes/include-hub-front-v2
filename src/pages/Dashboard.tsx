@@ -1,3 +1,12 @@
+import { useAuth } from '../context/AuthContext'
+import DashboardAdmin from '../components/dashboard/dashboardAdmin'
+import DashboardColaborador from '../components/dashboard/dashboardColaborador'
+import DashboardGerente from '../components/dashboard/dashboardGerente'
+
 export default function Dashboard() {
-  return <h1 className="text-2xl font-bold p-4">Include Hub</h1>
+  const { user } = useAuth()
+  if (user?.papel === 'ADMIN') return <DashboardAdmin />
+  if (user?.papel === 'GERENTE') return <DashboardGerente />
+  if (user?.papel === 'COLABORADOR') return <DashboardColaborador />
+  return null
 }
