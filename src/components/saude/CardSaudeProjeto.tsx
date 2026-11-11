@@ -23,16 +23,16 @@ const CardSaudeProjeto = ({
 }: CardSaudeProjetoProps) => {
   const [status, setStatus] = useState<RotuloSaude>(projeto.status);
   const [justificativa, setJustificativa] = useState("");
-
   const atual = infoRotulo(projeto.status);
-
   const semMudanca = status === projeto.status && justificativa.trim() === "";
+  const faltaJustificativa = status === "ATRASADO" && justificativa.trim() === "";
 
   const enviar = (e: FormEvent) => {
     e.preventDefault();
     if (semMudanca || salvando) return;
     onSalvar(status, justificativa.trim() || undefined);
     setJustificativa("");
+    if (semMudanca || faltaJustificativa || salvando) return;
   };
 
   return (
@@ -69,7 +69,11 @@ const CardSaudeProjeto = ({
       <textarea
         value={justificativa}
         onChange={(e) => setJustificativa(e.target.value)}
-        placeholder="Justificativa (opcional)"
+        placeholder={
+          status === "ATRASADO"
+            ? "Justificativa (obrigatória para Atrasado)"
+            : "Justificativa (opcional)"
+        }
         aria-label="Justificativa"
         rows={4}
         className="w-full resize-none rounded-lg border border-[#A5AED8]/50 bg-[#2A2E42] px-4 py-3 text-white outline-none placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
@@ -81,7 +85,7 @@ const CardSaudeProjeto = ({
         </p>
       )}
 
-      <Button type="submit" disabled={semMudanca || salvando}>
+      <Button type="submit" disabled={semMudanca || faltaJustificativa || salvando}>
         {salvando ? "Salvando..." : "Salvar"}
       </Button>
     </form>

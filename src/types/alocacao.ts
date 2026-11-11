@@ -1,23 +1,21 @@
-import type { PessoaResumo } from './pessoa'
 import type { Categoria } from './categoria'
 import type { TipoProjeto } from './projeto'
 
 export interface Alocacao {
   id: number
-  pessoa: PessoaResumo
+  pessoa: { id: number; nome: string; horasSemanais: number }
   categoria: Categoria
   horasPrevistasSemana: number
-  percentual?: number
-  inicio: string 
-  fim: string 
+  inicio: string
+  fim: string | null 
 }
 
 export interface NovaAlocacao {
   pessoaId: number
   categoriaId: number
   horasPrevistasSemana: number
-  inicio: string
-  fim: string
+  inicio?: string 
+  fim?: string 
 }
 
 export interface ProjetoMinhasAlocacoes {

@@ -38,29 +38,25 @@ const ModalNovoProjeto = ({
   const [fimPrevisto, setFimPrevisto] = useState("");
 
   const interno = tipo === "INTERNO";
-
-  const periodoValido = inicio !== "" && fimPrevisto !== "" && fimPrevisto >= inicio;
+  const periodoValido = inicio === "" || fimPrevisto === "" || fimPrevisto >= inicio;
 
   const valido =
     nome.trim() !== "" &&
-    gerenteId !== "" &&
+    (interno || gerenteId !== "") &&
     periodoValido &&
     (interno || (cliente.trim() !== "" && Number(horas) > 0));
-
   const enviar = (e: FormEvent) => {
     e.preventDefault();
     if (!valido || salvando) return;
     onSalvar({
       nome: nome.trim(),
       tipo,
-      cliente: interno ? "" : cliente.trim(),
-      gerenteId: Number(gerenteId),
-      horasContratadas: interno ? 0 : Number(horas),
-      inicio,
-      fimPrevisto,
-    });
+      ...(interno ? {} : { cliente: cliente.trim(), horasContratadas: Number(horas) }),
+      ...(gerenteId ? { gerenteId: Number(gerenteId) } : {}),
+      ...(inicio ? { inicio } : {}),
+      ...(fimPrevisto ? { fimPrevisto } : {}),
+       });
   };
-
   return (
     <Modal titulo="Novo projeto" onFechar={onFechar}>
       <form onSubmit={enviar} className="flex flex-col gap-5">

@@ -1,3 +1,4 @@
+import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import Button from '../components/ui/Button'
@@ -10,7 +11,6 @@ import { deslocarSemana, segundaDaSemana, semanaAtual } from '../utils/semana'
 import type { ProjetoMinhasAlocacoes } from '../types/alocacao'
 import type { LancamentoItem } from '../types/lancamento'
 
-// Linhas da grade (vindas do back) + o que já foi lançado na semana
 function montarValores(linhas: ProjetoMinhasAlocacoes[], itens: LancamentoItem[]): ValoresGrade {
   const valores: ValoresGrade = {}
   for (const p of linhas) valores[p.id] = { horas: '', descricao: '' }
@@ -23,7 +23,7 @@ function montarValores(linhas: ProjetoMinhasAlocacoes[], itens: LancamentoItem[]
 }
 
 export default function Lancamentos() {
-  // A semana fica na URL e é sempre normalizada para a segunda-feira
+  const { user } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams()
   const semanaParam = searchParams.get('semana')
   const semana = segundaDaSemana(semanaParam)
@@ -53,9 +53,10 @@ export default function Lancamentos() {
         setErro(null)
         setSalvo(null)
         setErroSalvar(null)
+        if (!user) return
         const [minhas, lancadas] = await Promise.all([
           alocacoesService.minhas(semana),
-          lancamentosService.obterSemana(semana),
+          lancamentosService.obterSemana(semana, user.id),
         ])
         if (!ativo) return
         const linhas = minhas?.projetos ?? []

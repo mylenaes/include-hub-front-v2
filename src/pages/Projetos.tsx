@@ -125,7 +125,7 @@ export default function Projetos() {
                           p.cliente ?? '—'
                         )}
                       </td>
-                      {ehAdmin && <td className="py-5 pr-4">{p.gerente.nome}</td>}
+                      {ehAdmin && <td className="py-5 pr-4">{p.gerente?.nome ?? '—'}</td>}
                       <td className="py-5">
                         <Badge texto={status.texto} cor={status.cor} />
                       </td>

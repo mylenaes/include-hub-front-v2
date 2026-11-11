@@ -1,4 +1,5 @@
 import type { PessoaResumo } from './pessoa'
+import type { TipoProjeto } from './projeto'
 
 export interface LancamentoItem {
   id: number
@@ -25,8 +26,10 @@ export interface SalvarSemana {
 }
 
 export interface LancamentoConsulta extends LancamentoItem {
-  pessoa?: PessoaResumo 
-  projeto?: { id: number; nome: string }
+  pessoaId: number
+  semanaInicio: string
+  pessoa: PessoaResumo
+  projeto: { id: number; nome: string; tipo: TipoProjeto }
 }
 
 export interface ConsultaHoras {

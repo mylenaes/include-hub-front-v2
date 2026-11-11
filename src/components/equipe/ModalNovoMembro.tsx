@@ -45,17 +45,17 @@ const ModalNovoMembro = ({
     Number(horas) > 0;
 
   const enviar = (e: FormEvent) => {
-    e.preventDefault();
-    if (!valido || salvando) return;
-    onSalvar({
-      nome: nome.trim(),
-      email: email.trim(),
-      senha,
-      papel,
-      categoriaId: ehGerente ? null : Number(categoriaId),
-      horasSemanais: Number(horas),
-    });
-  };
+  e.preventDefault();
+  if (!valido || salvando) return;
+  onSalvar({
+    nome: nome.trim(),
+    email: email.trim(),
+    senha,
+    papel,
+    ...(ehGerente || categoriaId === "" ? {} : { categoriaId: Number(categoriaId) }),
+    horasSemanais: Number(horas),
+  });
+};
 
   return (
     <Modal titulo="Novo membro" onFechar={onFechar}>

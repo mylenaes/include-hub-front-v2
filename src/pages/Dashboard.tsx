@@ -1,7 +1,7 @@
 import { useAuth } from '../context/AuthContext'
-import DashboardAdmin from '../components/dashboard/dashboardAdmin'
-import DashboardColaborador from '../components/dashboard/dashboardColaborador'
-import DashboardGerente from '../components/dashboard/dashboardGerente'
+import DashboardAdmin from '../components/dashboard/DashboardAdmin'
+import DashboardGerente from '../components/dashboard/DashboardGerente'
+import DashboardColaborador from '../components/dashboard/DashboardColaborador'
 
 export default function Dashboard() {
   const { user } = useAuth()

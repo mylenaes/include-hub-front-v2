@@ -7,7 +7,7 @@ import { categoriasService } from '../services/categoriasService'
 import { HttpError } from '../services/http'
 import { pessoasService } from '../services/pessoasService'
 import { projetosService } from '../services/projetosService'
-import { formatarHoras, formatarPercentual } from '../utils/formatadores'
+import { formatarPercentual } from '../utils/formatadores'
 import type { Alocacao, NovaAlocacao } from '../types/alocacao'
 import type { Categoria } from '../types/categoria'
 import type { Pessoa } from '../types/pessoa'
@@ -134,9 +134,7 @@ export default function Alocacoes() {
                     <td className="py-5 pr-4">{a.categoria.nome}</td>
                     <td className="py-5 pr-4">{a.projetoNome}</td>
                     <td className="py-5">
-                      {a.percentual !== undefined
-                        ? formatarPercentual(a.percentual)
-                        : `${formatarHoras(a.horasPrevistasSemana)}/sem`}
+                      {formatarPercentual((a.horasPrevistasSemana / a.pessoa.horasSemanais) * 100)}
                     </td>
                   </tr>
                 ))}

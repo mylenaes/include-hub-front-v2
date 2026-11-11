@@ -17,8 +17,8 @@ export interface NovaPessoa {
   email: string
   senha: string 
   papel: Usuario['papel']
-  categoriaId: number | null 
-  horasSemanais: number
+  categoriaId?: number 
+  horasSemanais: number 
 }
 
 export type EditarPessoa = Partial<Omit<NovaPessoa, 'senha'>> & { ativo?: boolean }

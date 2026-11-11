@@ -8,11 +8,11 @@ export interface Projeto {
   nome: string
   cliente?: string | null 
   tipo: TipoProjeto
-  gerente: PessoaResumo
+  gerente: PessoaResumo | null
   status: RotuloSaude
   horasContratadas: number | null
-  inicio: string 
-  fimPrevisto: string 
+  inicio: string | null 
+  fimPrevisto: string | null 
   ativo: boolean
 }
 
@@ -29,12 +29,12 @@ export interface ProjetoDetalhe extends Projeto {
 
 export interface NovoProjeto {
   nome: string
-  cliente: string
   tipo: TipoProjeto
-  gerenteId: number
-  horasContratadas: number
-  inicio: string 
-  fimPrevisto: string 
+  cliente?: string
+  gerenteId?: number
+  horasContratadas?: number
+  inicio?: string 
+  fimPrevisto?: string 
 }
 
 export type EditarProjeto = Partial<NovoProjeto> & { ativo?: boolean }
